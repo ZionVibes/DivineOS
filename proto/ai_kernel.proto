@@ -1,0 +1,485 @@
+syntax = "proto3";
+
+package divineos.ai_kernel;
+
+// IPC Architecture Definition
+// This defines the protobuf schemas for communication between kernel and AI components
+
+// Resource statistics
+message ResourceStats {
+  double cpu_usage = 1;
+  uint64 memory_usage = 2;
+  uint64 disk_usage = 3;
+  uint64 network_io = 4;
+  uint64 timestamp = 5;
+}
+
+// Process information
+message ProcessInfo {
+  uint32 pid = 1;
+  string name = 2;
+  uint32 priority = 3;
+  uint64 memory_usage = 4;
+  uint64 cpu_time = 5;
+  ProcessStatus status = 6;
+  optional uint32 parent_pid = 7;
+}
+
+// Process status enumeration
+enum ProcessStatus {
+  RUNNING = 0;
+  WAITING = 1;
+  BLOCKED = 2;
+  TERMINATED = 3;
+  SUSPENDED = 4;
+}
+
+// System health metrics
+message SystemHealth {
+  float cpu_temperature = 1;
+  double memory_pressure = 2;
+  DiskHealth disk_health = 3;
+  NetworkStatus network_status = 4;
+  uint64 timestamp = 5;
+}
+
+// Disk health information
+message DiskHealth {
+  DiskStatus status = 1;
+  float temperature = 2;
+  uint64 error_count = 3;
+}
+
+// Disk status enumeration
+enum DiskStatus {
+  HEALTHY = 0;
+  DEGRADED = 1;
+  FAILED = 2;
+}
+
+// Network status
+message NetworkStatus {
+  NetworkStatusEnum status = 1;
+  uint64 bandwidth_used = 2;
+  uint64 latency = 3;
+}
+
+// Network status enumeration
+enum NetworkStatusEnum {
+  ONLINE = 0;
+  OFFLINE = 1;
+  LIMITED = 2;
+}
+
+// Scheduling context for AI decisions
+message SchedulingContext {
+  uint32 process_id = 1;
+  uint32 priority = 2;
+  ResourceRequirements resource_requirements = 3;
+  repeated ProcessPerformance historical_performance = 4;
+  SystemLoad system_load = 5;
+  uint64 timestamp = 6;
+}
+
+// Resource requirements
+message ResourceRequirements {
+  uint32 cpu_cores = 1;
+  uint64 memory_mb = 2;
+  uint64 disk_mb = 3;
+  uint64 network_bandwidth = 4;
+}
+
+// Process performance data
+message ProcessPerformance {
+  uint32 process_id = 1;
+  uint64 cpu_time = 2;
+  uint64 memory_usage = 3;
+  uint64 execution_time = 4;
+  uint64 timestamp = 5;
+}
+
+// System load metrics
+message SystemLoad {
+  double cpu_load = 1;
+  double memory_load = 2;
+  double disk_load = 3;
+  double network_load = 4;
+}
+
+// Scheduling decision from AI
+message SchedulingDecision {
+  uint32 process_id = 1;
+  uint32 recommended_priority = 2;
+  uint64 execution_time = 3;
+  ResourceAllocation resource_allocation = 4;
+  double confidence = 5;
+  uint64 timestamp = 6;
+}
+
+// Resource allocation
+message ResourceAllocation {
+  uint32 cpu_cores = 1;
+  uint64 memory_mb = 2;
+  uint64 disk_mb = 3;
+  uint64 network_bandwidth = 4;
+}
+
+// Memory request from AI
+message MemoryRequest {
+  uint32 process_id = 1;
+  uint64 size = 2;
+  MemoryType allocation_type = 3;
+  uint32 priority = 4;
+  uint64 timeout = 5;
+}
+
+// Memory allocation response
+message MemoryAllocation {
+  uint32 process_id = 1;
+  uint64 address = 2;
+  uint64 size = 3;
+  MemoryType allocation_type = 4;
+  uint64 timestamp = 5;
+}
+
+// Memory type enumeration
+enum MemoryType {
+  HEAP = 0;
+  STACK = 1;
+  MMAP = 2;
+  SHARED = 3;
+}
+
+// Security policy evaluation
+message SecurityPolicy {
+  uint32 process_id = 1;
+  SecurityOperation operation = 2;
+  ResourceAccess resource_access = 3;
+  uint64 timestamp = 4;
+}
+
+// Security operation enumeration
+enum SecurityOperation {
+  READ = 0;
+  WRITE = 1;
+  EXECUTE = 2;
+  NETWORK = 3;
+  FILE = 4;
+}
+
+// Resource access information
+message ResourceAccess {
+  oneof access_type {
+    string file = 1;
+    string network = 2;
+    uint64 memory = 3;
+    string device = 4;
+  }
+}
+
+// Security decision from kernel
+message SecurityDecision {
+  uint32 process_id = 1;
+  bool allowed = 2;
+  string reason = 3;
+  uint64 timestamp = 4;
+}
+
+// AI decision notification
+message AIDecision {
+  AIDecisionType decision_type = 1;
+  AIDecisionContext context = 2;
+  uint64 timestamp = 3;
+}
+
+// AI decision type enumeration
+enum AIDecisionType {
+  SCHEDULING = 0;
+  MEMORY = 1;
+  SECURITY = 2;
+  OPTIMIZATION = 3;
+}
+
+// AI decision context
+message AIDecisionContext {
+  oneof decision {
+    SchedulingDecision scheduling_decision = 1;
+    MemoryAllocation memory_allocation = 2;
+    SecurityDecision security_decision = 3;
+    OptimizationRecommendation optimization = 4;
+  }
+}
+
+// AI performance metrics
+message AIPerformance {
+  double model_accuracy = 1;
+  uint64 inference_time = 2;
+  ResourceUsage resource_usage = 3;
+  double confidence_score = 4;
+  uint64 timestamp = 5;
+}
+
+// Resource usage metrics
+message ResourceUsage {
+  double cpu_percent = 1;
+  uint64 memory_mb = 2;
+  uint64 disk_mb = 3;
+  uint64 network_mb = 4;
+}
+
+// Optimization context
+message OptimizationContext {
+  ResourceType resource_type = 1;
+  double current_usage = 2;
+  repeated HistoricalDataPoint historical_data = 3;
+  PerformanceTarget target_performance = 4;
+  uint64 timestamp = 5;
+}
+
+// Resource type enumeration
+enum ResourceType {
+  CPU = 0;
+  MEMORY = 1;
+  DISK = 2;
+  NETWORK = 3;
+}
+
+// Historical data point
+message HistoricalDataPoint {
+  uint64 timestamp = 1;
+  double value = 2;
+}
+
+// Performance target
+message PerformanceTarget {
+  double cpu_utilization = 1;
+  double memory_utilization = 2;
+  uint64 response_time = 3;
+  uint64 throughput = 4;
+}
+
+// Optimization recommendation
+message OptimizationRecommendation {
+  ResourceType resource_type = 1;
+  OptimizationAction recommended_action = 2;
+  double confidence = 3;
+  double expected_improvement = 4;
+  uint64 timestamp = 5;
+}
+
+// Optimization action enumeration
+enum OptimizationAction {
+  INCREASE = 0;
+  DECREASE = 1;
+  MAINTAIN = 2;
+  REALLOCATE = 3;
+}
+
+// Model status
+message ModelStatus {
+  string model_version = 1;
+  uint64 last_updated = 2;
+  TrainingStatus training_status = 3;
+  double accuracy = 4;
+  PerformanceMetrics performance = 5;
+}
+
+// Training status enumeration
+enum TrainingStatus {
+  TRAINING = 0;
+  READY = 1;
+  FAILED = 2;
+  UPDATING = 3;
+}
+
+// Performance metrics
+message PerformanceMetrics {
+  double accuracy = 1;
+  uint64 latency = 2;
+  uint64 throughput = 3;
+}
+
+// Model update data
+message ModelUpdate {
+  string model_version = 1;
+  repeated TrainingSample training_data = 2;
+  UpdateType update_type = 3;
+  uint64 timestamp = 4;
+}
+
+// Update type enumeration
+enum UpdateType {
+  FULL = 0;
+  INCREMENTAL = 1;
+  VALIDATION = 2;
+}
+
+// Training sample
+message TrainingSample {
+  repeated double features = 1;
+  double label = 2;
+  uint64 timestamp = 3;
+}
+
+// Security context for AI
+message SecurityContext {
+  uint32 process_id = 1;
+  uint32 threat_level = 2;
+  BehaviorPattern behavior_pattern = 3;
+  uint64 timestamp = 4;
+}
+
+// Behavior pattern
+message BehaviorPattern {
+  uint32 process_id = 1;
+  PatternType pattern_type = 2;
+  double confidence = 3;
+  uint64 timestamp = 4;
+}
+
+// Pattern type enumeration
+enum PatternType {
+  NORMAL = 0;
+  ANOMALOUS = 1;
+  SUSPICIOUS = 2;
+  MALICIOUS = 3;
+}
+
+// Process lifecycle event
+message ProcessLifecycleEvent {
+  ProcessLifecycleEventType event_type = 1;
+  ProcessInfo process_info = 2;
+}
+
+// Process lifecycle event type
+enum ProcessLifecycleEventType {
+  PROCESS_CREATED = 0;
+  PROCESS_STARTED = 1;
+  PROCESS_TERMINATED = 2;
+  PROCESS_SUSPENDED = 3;
+  PROCESS_RESUMED = 4;
+}
+
+// System event
+message SystemEvent {
+  SystemEventType event_type = 1;
+  bytes payload = 2;
+  uint64 timestamp = 3;
+  string source = 4;
+}
+
+// System event type
+enum SystemEventType {
+  PROCESS_LIFECYCLE = 0;
+  RESOURCE_USAGE = 1;
+  SYSTEM_HEALTH = 2;
+  SECURITY_ALERT = 3;
+  AI_DECISION = 4;
+  OPTIMIZATION_RESULT = 5;
+}
+
+// Security alert
+message SecurityAlert {
+  uint32 process_id = 1;
+  uint32 threat_level = 2;
+  AlertType alert_type = 3;
+  string description = 4;
+  uint64 timestamp = 5;
+}
+
+// Alert type enumeration
+enum AlertType {
+  SECURITY = 0;
+  PERFORMANCE = 1;
+  RESOURCE = 2;
+  HEALTH = 3;
+}
+
+// Telemetry data
+message TelemetryData {
+  TelemetryEventType event_type = 1;
+  bytes payload = 2;
+  uint64 timestamp = 3;
+  string source = 4;
+}
+
+// Telemetry event type
+enum TelemetryEventType {
+  PROCESS = 0;
+  RESOURCE = 1;
+  SECURITY = 2;
+  AI = 3;
+  SYSTEM = 4;
+}
+
+// Error messages
+message KernelError {
+  enum ErrorType {
+    INVALID_PROCESS_ID = 0;
+    RESOURCE_EXHAUSTED = 1;
+    SECURITY_VIOLATION = 2;
+    TIMEOUT = 3;
+    INTERNAL_ERROR = 4;
+  }
+  ErrorType type = 1;
+  string message = 2;
+  uint64 timestamp = 3;
+}
+
+message AIError {
+  enum ErrorType {
+    MODEL_NOT_READY = 0;
+    INFERENCE_ERROR = 1;
+    INVALID_INPUT = 2;
+    TIMEOUT = 3;
+    INTERNAL_ERROR = 4;
+  }
+  ErrorType type = 1;
+  string message = 2;
+  uint64 timestamp = 3;
+}
+
+// Service definitions for gRPC communication
+service KernelService {
+  // Resource management
+  rpc GetResourceStats(ResourceStatsRequest) returns (ResourceStats);
+  rpc GetProcessInfo(ProcessInfoRequest) returns (ProcessInfo);
+  rpc GetSystemHealth(SystemHealthRequest) returns (SystemHealth);
+  
+  // Scheduling
+  rpc RequestSchedulingDecision(SchedulingContext) returns (SchedulingDecision);
+  
+  // Memory management
+  rpc RequestMemoryAllocation(MemoryRequest) returns (MemoryAllocation);
+  
+  // Security
+  rpc EvaluateSecurityPolicy(SecurityPolicy) returns (SecurityDecision);
+  
+  // AI notifications
+  rpc NotifyAIDecision(AIDecision) returns (Empty);
+}
+
+service AIService {
+  // AI performance
+  rpc GetAIPerformance(AIPerformanceRequest) returns (AIPerformance);
+  
+  // Optimization
+  rpc RequestOptimization(OptimizationContext) returns (OptimizationRecommendation);
+  
+  // Model management
+  rpc GetModelStatus(ModelStatusRequest) returns (ModelStatus);
+  rpc UpdateModel(ModelUpdate) returns (Empty);
+  
+  // Security intelligence
+  rpc RequestSecurityDecision(SecurityContext) returns (SecurityDecision);
+}
+
+// Request messages
+message ResourceStatsRequest {}
+message ProcessInfoRequest {
+  uint32 pid = 1;
+}
+message SystemHealthRequest {}
+message AIPerformanceRequest {}
+message ModelStatusRequest {}
+message Empty {}
